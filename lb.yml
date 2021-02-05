@@ -143,10 +143,11 @@
   - name: "Stopping firewall"
     firewalld:
          port: "{{new_port}}/tcp"
-         permanent: yes
-         immediate: yes
+         zone: public
+         permanent: true
+         immediate: true
          state: enabled
-    
+
   handlers:
   - name: Restarting web service
     service:
