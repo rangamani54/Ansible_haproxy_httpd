@@ -1,0 +1,14 @@
+- hosts: 192.168.43.42
+  tasks:
+  - name: "Installing haproxy"
+    package: 
+      name: haproxy
+      state: present
+
+  - name: "Copying haproxy configuration file"
+    template: 
+    src: /ws5/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+
+
+  
