@@ -1,4 +1,8 @@
-- hosts: 192.168.43.42
+- hosts: loadbalancer
+  vars_prompt:
+  - name: port_number
+    private: no
+    prompt: "Enter the port number for load balancer"
   tasks:
   - name: "Installing haproxy"
     package: 
@@ -7,8 +11,20 @@
 
   - name: "Copying haproxy configuration file"
     template: 
-    src: /ws5/haproxy.cfg
-    dest: /etc/haproxy/haproxy.cfg
+       src: /ws5/haproxy.cfg.j2
+       dest: /etc/haproxy/haproxy.cfg
+    notify: Restarting haproxy
 
+  - name: "Starting haproxy service"
+    service:
+        name: haproxy
+        state: started
+
+
+  handlers:
+  - name: Restarting haproxy
+    service:
+        name: haproxy
+        state: restarted   
 
   
