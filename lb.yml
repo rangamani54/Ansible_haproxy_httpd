@@ -74,15 +74,6 @@
 
 
 - hosts: webserver
-  vars_prompt:
-  - name: new_port
-    private: no 
-    prompt: "Enter the Port number for httpd: "
- 
-  - name: httpd_dir
-    private: no
-    prompt: "Enter the root  directory name for httpd"
-
   tasks:
   - name: "Creating Directory"
     file:
@@ -120,20 +111,10 @@
            - httpd
            - php 
 
-  - name: "Root directory for httpd"
-    file:
-         name: "/var/www/{{ httpd_dir }}"
-         state: directory
-  - name: "Copying configuration file"
-    template:
-            src: /ws4/custom.conf
-            dest: /etc/httpd/conf.d/
-    notify: Restarting web service
-
   - name: "Copying web page"
     template: 
         src: "/ws5/m.php"
-        dest: "/var/www/{{ httpd_dir }}/m.php"
+        dest: "/var/www/html/m.php"
 
   - name: "Starting web service"
     service:
@@ -142,14 +123,10 @@
 
   - name: "Stopping firewall"
     firewalld:
-         port: "{{new_port}}/tcp"
+         port: "80/tcp"
          zone: public
          permanent: true
          immediate: true
          state: enabled
 
-  handlers:
-  - name: Restarting web service
-    service:
-       name: httpd
-       state: restarted
+ 
